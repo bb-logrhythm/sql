@@ -1,0 +1,26 @@
+-- ==========================
+-- Deployment Review Queries
+-- ==========================
+
+-- Metrics Queries
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- -- Clusters
+-- SELECT
+--       [ClusterName]
+--       ,CASE WHEN dx.[ClusterIdentifier] = NULL THEN 'Retired' ELSE 'Active' END AS 'ClusterStatus'
+--       ,CASE WHEN dxs.[Status] = 0 THEN 'Normal' WHEN dxs.[Status] = 3 THEN 'Critical' ELSE 'Other' END AS 'ClusterHealth'
+--       ,dxs.[LastHeartbeat]
+--       ,dxs.[NumberOfNodes]
+--       ,dp2.[CountMediators] as 'ActiveMediators'
+-- FROM [LogRhythmEMDB].[dbo].[NGPCluster] dx
+--       LEFT JOIN (
+--             SELECT
+--                   [ClusterID]
+--                   ,COUNT(DISTINCT [MediatorID]) AS 'CountMediators'
+--             FROM [LogRhythmEMDB].[dbo].[Mediator] dp
+--             WHERE dp.[Mode] = 1
+--             GROUP BY [ClusterID]
+--             ) dp2 ON dx.ClusterID = dp2.ClusterID
+--       LEFT JOIN [LogRhythmEMDB].[dbo].[NGPClusterStats] dxs ON dx.[ClusterID] = dxs.[ClusterID]
+-- ;

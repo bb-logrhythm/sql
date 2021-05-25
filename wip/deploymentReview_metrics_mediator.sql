@@ -1,0 +1,28 @@
+-- ==========================
+-- Deployment Review Queries
+-- ==========================
+
+-- Metrics Queries
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- -- Mediators
+-- SELECT
+--       [MediatorID]
+--       ,[Name]
+--       ,CASE WHEN dp.[Mode] = 0 THEN 'Offline' WHEN dp.[Mode] = 1 THEN 'Online Active' WHEN dp.[Mode] = 2 THEN 'Online Archive' ELSE 'OTHER' END AS 'Mode'
+--       ,[LastHeartbeat]
+--       ,[Version]
+--       ,[LogLevel]
+--       ,[ActiveArchivePath]
+--       ,[InactiveArchivePath]
+--       ,[ArchiveSize]
+--       ,[ArchiveAge]
+--       ,[ArchiveBatch]
+--       ,[ArchiveCompression]
+--       ,[ProcessPriority]
+--       ,[MaxServiceMemory]
+--       ,[ClusterID]
+--       ,[ClusterName]
+-- FROM [LogRhythmEMDB].[dbo].[Mediator] dp
+--       LEFT JOIN [LogRhythmEMDB].[dbo].[NGPCluster] dx on dp.[ClusterID] = dx.[ClusterID]
+-- ;  
