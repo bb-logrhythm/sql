@@ -1,0 +1,22 @@
+/* Move all host records that do not have an active log source or agent to defined entity.
+
+BACKUP EMDB FIRST!!!
+
+This Query is a dry run and you must change Rollback to commit for it to actually be applied.
+
+I run it like below and check the row count to the query to make sure they are the same and then change it to commit.
+*/
+USE LogRhythmEMDB
+Begin Tran
+UPDATE [LogrhythmEMDB].[dbo].[host]
+SET [EntityID] = 42
+where hostid in (SELECT HostID FROM
+(Select HostID from dbo.SystemMonitor WITH (NOLOCK)
+group by HostID
+having max(Status) = 0
+UNION
+select HostID from dbo.MsgSource WITH (NOLOCK)
+group by HostID
+having max(RecordStatus) = 0) DUMMYNAME
+WHERE HostID NOT IN (SELECT HostID FROM dbo.host WITH (NOLOCK) WHERE recordstatus=0))
+Rollback Tran
