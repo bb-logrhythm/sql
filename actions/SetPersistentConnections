@@ -1,0 +1,17 @@
+/* 
+Set all Windows Log Sources to use a Persistent Connection
+MsgSourceFormats:
+ *  3 - Flat File
+ *  4 - Windows NT 3 - Windows 2003/XP
+ * 10 - Windows 7+, Windows Server 2008+ - Raw format
+ * 28 - Windows 7+, Windows Server 2008+ - XML format (faster processing)
+*/
+USE LogRhythmEMDB
+GO
+UPDATE [LogRhythmEMDB].[dbo].[MsgSource]
+SET [PersistentConnection] = 1
+WHERE [PersistentConnection] = 0
+AND [MsgSourceTypeID] in (
+    SELECT [MsgSourceTypeID] 
+    FROM [LogRhythmEMDB].[dbo].[MsgSourceType] mst 
+    WHERE mst.[MsgSourceFormat] in (3, 4, 10, 28))
