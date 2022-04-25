@@ -1,0 +1,12 @@
+/* Query to list all active host records that do not have an active log source or agent */
+
+USE LogRhythmEMDB
+select * from dbo.host where hostid in (SELECT HostID FROM
+(Select HostID from dbo.SystemMonitor WITH (NOLOCK)
+group by HostID
+having max(Status) = 0
+UNION
+select HostID from dbo.MsgSource WITH (NOLOCK)
+group by HostID
+having max(RecordStatus) = 0) DUMMYNAME
+WHERE HostID NOT IN (SELECT HostID FROM dbo.host WITH (NOLOCK) WHERE recordstatus=0))
